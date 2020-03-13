@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./index.css">
+    <title>kep-alive-demo</title>
+</head>
+<body>
+    <div id="app">
+        <button
+            v-for="tab in tabs"
+            v-bind:key="tab"
+            v-bind:class = "['tab-button', { active : currentTab === tab}]"
+            v-on:click="currentTab = tab"
+        >{{tab}}</button>
+    </div>
+</body>
+
+<script src="../../vue.js"></script>
+<script>
+    Vue.component('tab-posts',{
+        data() {
+            return {
+                posts: [
+                    {
+                        id:1
+                    },
+                    {
+                        id:2
+                    },
+                    {
+                        id:3
+                    }
+                ],
+                tabs: ['post','archive']
+            }
+        },
+    });
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                currentTab: 'posts',
+                tabs: ['posts','archive']
+            }
+        },
+    });
+</script>
+</html>

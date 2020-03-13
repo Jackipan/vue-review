@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <button @click="met1">met1</button>
+        <test-directive>
+        </test-directive>
+    </div>
+</body>
+<script src="../../vue.js"></script>
+<script>
+    var mixin = {
+        data() {
+            return {
+                message: 'message in mixin',
+                foo: 'foo in mixin'
+            }
+        },
+        created() {
+            console.log('混入组件的钩子被调用'); 
+            var myOption = this.$options.myOption
+            if (myOption) {
+                console.log(myOption);
+            }
+        },
+        methods: {
+            met1: function () {
+                console.log('混入组件中的"met1"方法');
+            }
+        },
+    };
+// 全局自定义指令
+    // Vue.directive('foucs',{
+    //     inserted: function (el) {
+    //         el.focus()
+    //     }
+    // })
+
+    Vue.component('test-directive',{
+        
+        template: `<input type="text" v-focus />`,
+        // 注册组件内自定义指令
+        directives:{
+            focus: {
+                inserted: function (el) {
+                    el.focus()
+                }
+            }
+        },
+    })
+
+    new Vue({
+        el:'#app',
+        mixins: [mixin],
+        myOption: 'option in where',
+        data() {
+            return {
+                message: 'nice in component',
+                bar: 'bar in component'
+            }
+        },
+        created() {
+            console.log("组件的钩子被调用");
+        },
+        methods: {
+            met1: function () {
+                console.log('组件中的"met1"方法');
+            }
+        },
+    })
+</script>
+
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>directive | 自定义指令</title>
+</head>
+
+<body>
+    <div id="app">
+        <test-directive v-focus></test-directive>
+    </div>
+</body>
+<script src="../../vue.js"></script>
+<script>
+
+    // 全局自定义指令
+    Vue.directive('focus', {
+        inserted: function (el) {
+            console.log('bind',el.focus());
+        }
+    })
+
+    // 注册组件
+    Vue.component('test-directive', {
+        template: `<div>
+                <button>focus</button>
+            </div>`,
+        // 注册组件内自定义指令
+        directives: {
+            focus: {
+                inserted: function (el) {
+                    el.focus()
+                }
+            }
+        },
+    })
+
+    // 绑定DOM元素
+    new Vue({
+        el: '#app',
+    });
+</script>
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <router-view></router-view>
+    </div>
+</body>
+
+<script>
+    const User = {
+        template: `
+        <div class="user">
+            <h3>User {{ $route.params.id }}</h3>
+            <router-view></router-view>
+        </div>
+        `
+    }
+
+    // 嵌套路由
+    const UserProfile = {
+        template: `<div class="user">
+            <h4>UserProfile</h4>
+            <router-link :to="{ name: 'user', params: { userId: 1 } }">To User 1</router-link>
+        </div>`
+    }
+    const UserPosts = {
+        template: `<div class="user">
+            <h4>UserPosts</h4>
+            <router-link :to="{ name: 'user', params: { userId: 4 } }">To User 4</router-link>
+        </div>`
+    }
+
+    const router = new VueRouter({
+        routes: [
+            {
+                path: '/user/:id',
+                name: 'user',
+                component: User,
+                children: [
+                    {
+                        path: 'profile',
+                        component: UserProfile
+                    },
+                    {
+                        path: 'posts',
+                        component: UserPosts
+                    },
+                ]
+            }
+        ]
+    })
+    const app = new Vue({
+        router
+    }).$mount("#app");
+
+
+</script>
+
+</html>

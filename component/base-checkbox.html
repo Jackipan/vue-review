@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>base-checkbox</title>
+</head>
+
+<body>
+    <div id="app">
+        <base-checkbox v-model="lovingVue" v-on:focus="onFocus" @change="change"></base-checkbox>
+    </div>
+
+    <script src="../../vue.js"></script>
+    <script>
+        Vue.component('base-checkbox', {
+            data() {
+                return {
+                    label: 'aaaa'
+                }
+            },
+            props: ['label', 'value'],
+            computed: {
+                inputListeners: function () {
+                    var vm = this
+                    return Object.assign({},
+                        this.$listeners,
+                        {
+                            input: function (event) {
+                                vm.$emit('input', event.target.value)
+                            }
+                        }
+                    )
+                }
+            },
+            template: `
+            <label>
+                {{ label }}
+                <input
+                v-bind="$attrs"
+                v-bind:value="value"
+                v-on='inputListeners'
+            >
+            </label>
+        `
+        });
+        var vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    lovingVue: '',
+                }
+            },
+            methods: {
+                change: function (e) {
+                    console.log(e);
+                },
+                onFocus: function () {
+                    console.log("onFocus");
+
+                }
+            },
+        });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../../vue.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="container">
+        <base-layout>
+            <template v-slot:test>
+                <div>
+                   static word
+                </div>
+            </template>
+        </base-layout>
+    </div>
+
+    <script>
+        Vue.component('base-layout', {
+            data() {
+                return {
+                    foo: {
+                        firstName: "foo-feng",
+                        lastName: 'foo-pan'
+                    }
+                }
+            },
+            template: `
+                <div>
+                    <slot v-bind:foo="foo">
+                        {{ foo.firstName }}
+                    </slot>
+                </div>
+            `
+        });
+        var vm = new Vue({
+            el: '#container',
+            test:{}
+        });
+    </script>
+</body>
+
+</html>

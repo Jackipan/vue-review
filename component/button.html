@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>blog-post</title>
+</head>
+
+<body>
+    <div id="blog">
+        <input type="text" v-model="value">
+        <input type="text" v-model="searchText" v-on:input="searchText=$event.target.value" >
+        <blog-post :style="{ fontSize: postFontSize + 'em'}" v-for="post in posts" :key="post.id" :post="post"
+            @enlarge="enlarge"></blog-post>
+        <custom-input @input="test"></custom-input>
+    </div>
+</body>
+<script src="../../vue.js"></script>
+<script>
+    Vue.component('custom-input',{
+        props: ['value'],
+        template: `
+            <input v-bind:value="value" v-on:input="$emit('input', $event.target.value)"></input>
+        `
+    })
+    Vue.component('blog-post', {
+        props: ["post"],
+        data: function () {
+            return {
+                count: 0
+            }
+        },
+        methods: {
+            enlarge: function () {
+                this.$emit('enlarge', this.count)
+            }
+        },
+        template: `
+            <div class="blog-post">
+                <button v-on:click="enlarge"> Enlarge Text </button>
+                <div v-html="post.content"></div> 
+            </div>
+        `
+    });
+    var vm = new Vue({
+        el: "#blog",
+        data() {
+            return {
+                posts: [
+                    {
+                        id: 1,
+                        title: 'enlarge',
+                        content: 'blog-post',
+                    }
+                ],
+                postFontSize: 1,
+                value: '',
+                searchText: ''
+            }
+        },
+        methods: {
+            enlarge: function (e) {
+                console.log(e);
+
+                this.postFontSize += 0.1
+            },
+            test: function (e) {
+                console.log(e);
+            }
+        },
+    });
+</script>
+
+</html>

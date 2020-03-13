@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://blog-static.cnblogs.com/files/gxsyj/browser.min.js" type="text/babel"></script>
+    <script src="../vue.js"></script>
+    <title>Document</title>
+    <style>
+        .head {
+            width: 80px;
+            max-height: 160px;
+            background-size: cover;
+            background: no-repeat;
+        }
+
+        .ask {
+            line-height: 100px;
+        }
+
+        .static {
+            border: 1px solid springgreen;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div id="app">
+        <input v-model="msg"></input>
+        <br>
+        <span>{{revermsg}}</span>
+        <br>
+        <span>{{now}}</span>
+        <br>
+        <input type="text" v-model="firstname"><input type="text" v-model.lazy="lastname">
+        <span>{{fullname}}</span>
+        <div class="ask">
+            <input type="text" v-model="question">
+            <span>{{answer}}</span>
+            <img class="head" :src="href" alt="">
+        </div>
+        <div class="static" v-bind:class="stat">
+            {{isActive}}
+        </div>
+        <div class="static2" v-bind:class="[test1,test2]">
+
+        </div>
+        <div :style="{ display: ['-webkit-box', '-ms-flexbox', 'flex'] }"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                msg: "hello",
+                firstname: 'foo',
+                lastname: 'bar',
+                question: '',
+                answer: ' I can\'t give you an answer until you ask an ques',
+                href: '',
+                isActive: true,
+                hasError: false,
+                test1: 'test11',
+                test2: 'test22'
+            },
+            computed: {
+                revermsg: function () {
+                    return this.msg.split('').reverse().join('')
+                },
+                now: function () {
+                    return Date.now()
+                },
+                fullname: {
+                    set: function (val) {
+                        var names = val.split(' ')
+                        this.firstname = 'names'
+                        this.lastname = names[names.length - 1]
+                        console.log(this.firstname, this.lastname);
+                    },
+                    get: function () {
+                        return this.firstname + ' ' + this.lastname
+                    }
+                },
+                stat: function () {
+                    console.log(this.isActive && !this.hasError, this.hasError && this.hasError.type === 'fatal');
+
+                    return {
+                        active: this.isActive && !this.hasError,
+                        'text-danger': this.hasError && this.hasError.type === 'fatal'
+                    }
+                }
+
+            },
+            watch: {
+                question: function (newQue, oldQue) {
+                    this.answer = 'Waiting for you to stop typing..'
+                    this.debouncedGetAnswer()
+                }
+            },
+            created: function () {
+                this.debouncedGetAnswer = _.debounce(this.getAnswer, 500)
+            },
+            methods: {
+                getAnswer: function () {
+                    if (this.question.indexOf('?') === -1) {
+                        this.answer = 'you need an \'?\' mark'
+                        return
+                    }
+                    this.answer = "Thinking..."
+                    var vm = this;
+                    axios.get('https://yesno.wtf/api').then(function (response) {
+                        vm.answer = _.capitalize(response.data.answer)
+                        vm.href = ''
+                        vm.href = _.capitalize(response.data.image)
+
+                    }).catch(function(err){
+                        vm.answer = "Cant't get the api. " + err
+                    });
+                }
+            },
+        });
+    </script>
+</body>
+
+</html>

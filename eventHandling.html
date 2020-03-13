@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../vue.js"></script>
+</head>
+
+<body>
+    <div id="app" @click.right="clear">
+        <button @click.once="greet">greet</button>
+        <button @click="event('message',$event)">event</button>
+        <input v-model.trim="age" v-on:keyup.enter="getVal" placeholder="trim" >
+        <div class="onScroll" v-on:="onScroll" v-show="jack">
+            <p style="white-space: pre-line;">{{message}}</p>
+            <textarea name="" id="" cols="30" rows="10" v-model="message"></textarea>
+        </div>
+    </div>
+    <style>
+        body{
+            border: 1px solid antiquewhite;
+            padding: 10px;
+        }
+        #app{
+            border: 1px solid antiquewhite;
+        }
+        .onScroll {
+            height: 1000px;
+        }
+    </style>
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    name: 'vue.js',
+                    jack: true,
+                    message: '',
+                    age: ''
+                }
+            },
+            methods: {
+                greet: function () {
+                    console.log(this.name);
+
+                },
+                event: function (message, event) {
+                    if (event) {
+                        console.log(event.target);
+                        event.preventDefault();
+
+                    }
+                    console.log(message);
+                },
+                onScroll: function () {
+                    console.log('onScroll');
+                },
+                getVal: function (val) {
+                    console.log(val.target.value);
+                },
+                clear: function (event) {
+                    if (event) {
+                        console.log(event);
+                        event.preventDefault()
+                    }
+                    console.log("right");
+                }
+            },
+        });
+    </script>
+</body>
+
+</html>
